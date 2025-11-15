@@ -24,7 +24,7 @@ Inside each SID key, you can find up to four important subkeys that store differ
 - **Purpose:** This is the most critical subkey for our analysis. It stores the specific User Rights (privileges) assigned to the SID.
 - **Data Storage:** It contains a single, unnamed (Default) value. The data is in a raw binary format (REG_NONE).
 - **Structure:** This binary data is a PRIVILEGE_SET. It starts with a count of the privileges, followed by a series of 12-byte LUID_AND_ATTRIBUTES structures. 
-- **Absence:** As shown in your screenshot, some SIDs like S-1-5-32-559 **do not have this key**. This is normal and simply means that account has no privileges assigned to it directly through the Local Security Policy.
+- **Absence:** As shown in the screenshot, some SIDs like S-1-5-32-559 **do not have this key**. This is normal and simply means that account has no privileges assigned to it directly through the Local Security Policy.
 
 ## **2. Sid**
 
@@ -36,7 +36,7 @@ Inside each SID key, you can find up to four important subkeys that store differ
 
 - **Purpose:** This stores the security permissions for the account object itself.
 - **Interpretation:** In simple terms, this data defines who has the right to view or modify this account's properties (like changing its privileges).
-- **Structure:** The binary data is a SECURITY_DESCRIPTOR structure. Your Python script correctly parses this to identify the Owner (usually Administrators), the primary Group (usually SYSTEM), and the DACL (the list of permissions).
+- **Structure:** The binary data is a SECURITY_DESCRIPTOR structure. Python script correctly parses this to identify the Owner (usually Administrators), the primary Group (usually SYSTEM), and the DACL (the list of permissions).
 
 ## **4. ActSysAc (Account System Access)**
 
@@ -58,7 +58,6 @@ This value defines the User Rights Assignments for the account.
 
 **Structure (PRIVILEGE_SET) Breakdown:**
 
-|             |       |                                                                           |
 | ----------- | ----- | ------------------------------------------------------------------------- |
 | Bytes       | Value | Interpretation                                                            |
 | 01-00-00-00 | 1     | **Privilege Count:** There is 1 privilege assigned to this account.       |
@@ -120,7 +119,6 @@ This value contains the binary representation of the account's Security Identifi
 
 **Structure Breakdown:**
 
-|                   |            |                                                                                |
 | ----------------- | ---------- | ------------------------------------------------------------------------------ |
 | Bytes             | Value      | Interpretation                                                                 |
 | 01                | 1          | **Revision:** Always 1.                                                        |
@@ -150,7 +148,6 @@ D1-00-00-00
     - 0xD1 = 0x80 + 0x40 + 0x10 + 0x01
 3. **Mapping Bits to Logon Rights:** Each of these hex values corresponds to a specific system access right.
 
-|   |   |   |   |
 |---|---|---|---|
 |Bit Value (Hex)|Binary Representation|Logon Right (in secpol.msc)|Interpretation|
 |0x01|...0000 0001|**Allow log on locally**|This account is permitted to log on directly at the machine's console.|
@@ -170,9 +167,8 @@ This combination of rights is the standard, default security policy for the buil
 
 ## Bitmask Mapping
 
-|                 |                               |                                   |
 | --------------- | ----------------------------- | --------------------------------- |
-| Bit Value (Hex) | Your Flag Name                | Official Microsoft Constant       |
+| Bit Value (Hex) | Flag Name                     | Official Microsoft Constant       |
 | 0x00000001      | INTERACTIVE_LOGON             | SeInteractiveLogonRight           |
 | 0x00000002      | NETWORK_LOGON                 | SeNetworkLogonRight               |
 | 0x00000004      | BATCH_LOGON                   | SeBatchLogonRight                 |
