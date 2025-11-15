@@ -17,7 +17,7 @@ As seen in the screenshot, this key acts as a container. Each direct subkey is n
 
 Each SID key under Policy\Accounts represents a single security principal (a user or a group). To find out the friendly name (e.g., "Administrators" or "Profzzor"), this SID must be cross-referenced with the **SAM hive**.
 
-Inside each SID key, you can find up to four important subkeys that store different aspects of the account's policy:
+Inside each SID key, we can see up to four important subkeys that store different aspects of the account's policy:
 
 ## **1. Privilgs (Privileges)**
 
@@ -30,7 +30,7 @@ Inside each SID key, you can find up to four important subkeys that store differ
 
 - **Purpose:** This subkey contains a (Default) value that stores the raw binary version of the account's SID.
 - **Redundancy:** This might seem redundant because the parent key is already named with the SID string. The key name is for registry organization, while this value provides the raw binary SID that can be read programmatically by system services.
-- **Absence:** As we discovered during our debugging, **not every account key has this subkey**. For well-known principals (like S-1-1-0, "Everyone"), the system may omit this key, as the SID is globally known. This is why relying on the parent key's name is the most robust way to identify the SID.
+- **Absence:** As we can see, **not every account key has this subkey**. For well-known principals (like S-1-1-0, "Everyone"), the system may omit this key, as the SID is globally known. This is why relying on the parent key's name is the most robust way to identify the SID.
 
 ## **3. SecDesc (Security Descriptor)**
 
@@ -57,7 +57,7 @@ This value defines the User Rights Assignments for the account.
 ```
 
 **Structure (PRIVILEGE_SET) Breakdown:**
-
+|             |       |                                                                           |
 | ----------- | ----- | ------------------------------------------------------------------------- |
 | Bytes       | Value | Interpretation                                                            |
 | 01-00-00-00 | 1     | **Privilege Count:** There is 1 privilege assigned to this account.       |
@@ -118,7 +118,7 @@ This value contains the binary representation of the account's Security Identifi
 ```
 
 **Structure Breakdown:**
-
+|                   |            |                                                                                |
 | ----------------- | ---------- | ------------------------------------------------------------------------------ |
 | Bytes             | Value      | Interpretation                                                                 |
 | 01                | 1          | **Revision:** Always 1.                                                        |
@@ -129,6 +129,7 @@ This value contains the binary representation of the account's Security Identifi
 | 81-FA-4D-53       | 1397619329 | **Sub-Authority 3:** (Little-endian 0x534DFA81)                                |
 | 78-D1-55-EF       | 4015378808 | **Sub-Authority 4:** (Little-endian 0xEF55D178)                                |
 | E9-03-00-00       | 1001       | **Sub-Authority 5 (RID):** (Little-endian 0x000003E9) The Relative ID.         |
+
 **Resulting SID String:** `S-1-5-21-888844466-1397619329-4015378808-1001`
 
 ## **Decoding the ActSysAc Value**
@@ -148,6 +149,7 @@ D1-00-00-00
     - 0xD1 = 0x80 + 0x40 + 0x10 + 0x01
 3. **Mapping Bits to Logon Rights:** Each of these hex values corresponds to a specific system access right.
 
+|   |   |   |   |
 |---|---|---|---|
 |Bit Value (Hex)|Binary Representation|Logon Right (in secpol.msc)|Interpretation|
 |0x01|...0000 0001|**Allow log on locally**|This account is permitted to log on directly at the machine's console.|
@@ -166,7 +168,7 @@ The value 0xD1 for the SID ...-501 (Guest account) means that this account 
 This combination of rights is the standard, default security policy for the built-in Guest account in Windows, designed to restrict its capabilities significantly.
 
 ## Bitmask Mapping
-
+|                 |                               |                                   |
 | --------------- | ----------------------------- | --------------------------------- |
 | Bit Value (Hex) | Flag Name                     | Official Microsoft Constant       |
 | 0x00000001      | INTERACTIVE_LOGON             | SeInteractiveLogonRight           |
